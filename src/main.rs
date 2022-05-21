@@ -1,14 +1,20 @@
-/*!
-Example updating an executable to the latest version released via GitHub
-*/
-
-// TODO: properly generate release targets compatible with goreleaser
-fn get_target() -> &'static str {
-    "linux_amd64"
+// convert arch to go format
+fn get_arch() -> &'static str {
+    match std::env::consts::ARCH {
+        "x86_64" => "amd64",
+        "x86" => "386",
+        "aarch64" => "arm64",
+        _ => std::env::consts::ARCH,
+    }
 }
 
-fn get_bin_name() -> &'static str {
-    "db1000n"
+// generate release targets compatible with goreleaser
+fn get_target() -> String {
+    format!("{}_{}", std::env::consts::OS, get_arch())
+}
+
+fn get_bin_name() -> String {
+    format!("db1000n{}", std::env::consts::EXE_SUFFIX)
 }
 
 fn get_command() -> String {
@@ -19,9 +25,9 @@ fn update(ver: &str) -> Result<(), Box<dyn ::std::error::Error>> {
     let status = self_update::backends::github::Update::configure()
         .repo_owner("arriven")
         .repo_name("db1000n")
-        .bin_name(get_bin_name())
+        .bin_name(&get_bin_name())
         .bin_install_path(get_bin_name())
-        .target(get_target())
+        .target(&get_target())
         .show_output(false)
         .no_confirm(true)
         .current_version(ver)
@@ -56,7 +62,7 @@ use clap::Parser;
 #[derive(Parser)]
 struct Cli {
     #[clap(short, long, default_value_t = 3600)]
-    interval: u64
+    interval: u64,
 }
 
 pub fn main()-> Result<(), Box<dyn ::std::error::Error>> {
