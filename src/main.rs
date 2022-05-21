@@ -2,23 +2,28 @@
 Example updating an executable to the latest version released via GitHub
 */
 
+// TODO: properly generate release targets compatible with goreleaser
+fn get_target() -> &'static str {
+    "linux_amd64"
+}
+
+fn get_bin_name() -> &'static str {
+    "db1000n"
+}
+
+fn get_command() -> String {
+    format!("./{}", get_bin_name())
+}
+
 fn update(ver: &str) -> Result<(), Box<dyn ::std::error::Error>> {
     let status = self_update::backends::github::Update::configure()
         .repo_owner("arriven")
         .repo_name("db1000n")
-        .bin_name("db1000n")
-        .bin_install_path("db1000n")
-        .target("linux_amd64")
-        //.show_download_progress(true)
-        //.target_version_tag("v9.9.10")
-        //.show_output(false)
+        .bin_name(get_bin_name())
+        .bin_install_path(get_bin_name())
+        .target(get_target())
+        .show_output(false)
         .no_confirm(true)
-        //
-        // For private repos, you will need to provide a GitHub auth token
-        // **Make sure not to bake the token into your app**; it is recommended
-        // you obtain it via another mechanism, such as environment variables
-        // or prompting the user for input
-        //.auth_token(env!("DOWNLOAD_AUTH_TOKEN"))
         .current_version(ver)
         .build()?
         .update()?;
@@ -29,7 +34,7 @@ fn update(ver: &str) -> Result<(), Box<dyn ::std::error::Error>> {
 fn get_version() -> Result<String, Box<dyn ::std::error::Error>> {
     use std::process::Command;
 
-    let output = Command::new("./db1000n")
+    let output = Command::new(&get_command())
                 .args(["--version", "--log-format", "json"])
                 .output()?;
 
@@ -46,12 +51,26 @@ fn get_version() -> Result<String, Box<dyn ::std::error::Error>> {
     Ok(version.to_string())
 }
 
-pub fn main()-> Result<(), Box<dyn ::std::error::Error>> {
-    let version = get_version();
+use clap::Parser;
 
-    match version {
-        Ok(v) => update(&v)?,
-        Err(_) => update("0.0.0")?,
+#[derive(Parser)]
+struct Cli {
+    #[clap(short, long, default_value_t = 3600)]
+    interval: u64
+}
+
+pub fn main()-> Result<(), Box<dyn ::std::error::Error>> {
+    let args = Cli::parse();
+    loop {
+        let version = get_version();
+
+        match version {
+            Ok(v) => update(&v)?,
+            Err(_) => update("0.0.0")?,
+        }
+
+        let mut db1000n = std::process::Command::new(&get_command()).spawn()?;
+        std::thread::sleep(std::time::Duration::from_secs(args.interval));
+        db1000n.kill()?;
     }
-    Ok(())
 }
