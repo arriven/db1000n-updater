@@ -36,4 +36,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: db1000n-updater-${{ matrix.target }}
-          path: target/release
+          path: /project/target/release
