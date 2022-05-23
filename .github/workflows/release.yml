@@ -32,8 +32,8 @@ jobs:
         with:
           use-cross: true
           command: build
-          args: --target ${{ matrix.target }}
+          args: --release --target ${{ matrix.target }}
       - uses: actions/upload-artifact@v3
         with:
           name: db1000n-updater-${{ matrix.target }}
-          path: /project/target/release
+          path: target/release
