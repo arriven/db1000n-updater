@@ -4,6 +4,9 @@ on: [push]
 
 name: Binary release
 
+env:
+  RUSTFLAGS: "-C target-feature=+crt-static"
+
 jobs:
   release:
     strategy:
@@ -36,4 +39,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: db1000n-updater-${{ matrix.target }}
-          path: target/release/db1000n-updater
+          path: target/${{ matrix.target }}/release/db1000n-updater
