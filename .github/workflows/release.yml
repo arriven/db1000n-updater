@@ -4,9 +4,6 @@ on: [push]
 
 name: Binary release
 
-env:
-  RUSTFLAGS: "-C target-feature=+crt-static"
-
 jobs:
   release:
     strategy:
