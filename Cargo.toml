@@ -7,7 +7,6 @@ edition = "2021"
 
 
 [dependencies]
-openssl = { version = "0.10", features = ["vendored"] }
-self_update = { version = "0.30.0", features = ["archive-tar", "archive-zip", "compression-flate2", "compression-zip-deflate"]}
+self_update = { version = "0.30.0", features = ["archive-tar", "archive-zip", "compression-flate2", "compression-zip-deflate", "rustls"]}
 serde_json = "1.0.81"
 clap = { version = "3.0", features = ["derive"] }
