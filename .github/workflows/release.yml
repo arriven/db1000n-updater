@@ -22,6 +22,7 @@ jobs:
             x86_64-unknown-linux-musl,
             x86_64-unknown-linux-gnu,
           ]
+        cross: [true, false]
     name: release
     runs-on: ubuntu-latest
     steps:
@@ -33,7 +34,7 @@ jobs:
           override: true
       - uses: actions-rs/cargo@v1
         with:
-          use-cross: true
+          use-cross: ${{matrix.cross}}
           command: build
           args: --release --target ${{ matrix.target }}
       - uses: actions/upload-artifact@v3
