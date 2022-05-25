@@ -9,21 +9,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target:
-          [
-            aarch64-unknown-linux-musl,
-            aarch64-apple-darwin,
-            arm-unknown-linux-musleabi,
-            i686-pc-windows-msvc,
-            i686-pc-windows-gnu,
-            i686-unknown-linux-musl,
-            x86_64-apple-darwin,
-            x86_64-pc-windows-msvc,
-            x86_64-pc-windows-gnu,
-            x86_64-unknown-linux-musl,
-            x86_64-unknown-linux-gnu,
-          ]
-        os: [windows-latest, ubuntu-latest, macOS-latest]
+        include:
+          # linux targets
+          - target: aarch64-unknown-linux-musl
+            os: ubuntu-latest
+          - target: arm-unknown-linux-musleabi
+            os: ubuntu-latest
+          - target: i686-unknown-linux-musl
+            os: ubuntu-latest
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+          # windows targets
+          - target: i686-pc-windows-msvc
+            os: windows-latest
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+          # darwin targets
+          - target: aarch64-apple-darwin
+            os: macOS-latest
+          - target: x86_64-apple-darwin
+            os: macOS-latest
     name: release
     runs-on: ${{ matrix.os }}
     steps:
