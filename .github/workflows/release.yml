@@ -22,8 +22,10 @@ jobs:
           # windows targets
           - target: i686-pc-windows-msvc
             os: windows-latest
+            ext: .exe
           - target: x86_64-pc-windows-msvc
             os: windows-latest
+            ext: .exe
           # darwin targets
           - target: aarch64-apple-darwin
             os: macOS-latest
@@ -46,4 +48,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: db1000n-updater-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/db1000n-updater
+          path: target/${{ matrix.target }}/release/db1000n-updater${{ matrix.ext }}
