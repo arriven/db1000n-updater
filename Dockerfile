@@ -1,5 +1,3 @@
-FROM rust:1.61 as builder
-WORKDIR /usr/src/db1000n-updater
-COPY . .
-RUN cargo install --path .
+FROM alpine:3.16
+COPY db1000n-updater /usr/local/bin
 CMD ["db1000n-updater"]
