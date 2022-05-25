@@ -11,6 +11,7 @@ jobs:
   push_to_registry:
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         include:
           # linux targets
