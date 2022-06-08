@@ -65,4 +65,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: db1000n-updater-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/db1000n-updater-${{ matrix.target }}.tar.gz
+          path: db1000n-updater-${{ matrix.target }}.tar.gz
