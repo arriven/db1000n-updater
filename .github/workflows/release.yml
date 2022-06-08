@@ -21,11 +21,7 @@ jobs:
             os: ubuntu-latest
           - target: mips-unknown-linux-musl
             os: ubuntu-latest
-          - target: mips64-unknown-linux-muslabi64
-            os: ubuntu-latest
           - target: mipsel-unknown-linux-musl
-            os: ubuntu-latest
-          - target: mips64el-unknown-linux-muslabi64
             os: ubuntu-latest
           # windows targets
           - target: i686-pc-windows-msvc
@@ -53,7 +49,20 @@ jobs:
           use-cross: true
           command: build
           args: --release --target ${{ matrix.target }}
+      - uses: a7ul/tar-action@v1.1.0
+        id: compress
+        with:
+          command: c
+          cwd: ./target/${{ matrix.target }}/release
+          files: |
+            db1000n-updater${{ matrix.ext }}
+          outPath: db1000n-updater-${{ matrix.target }}.tar.gz
+      - uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            target/${{ matrix.target }}/release/db1000n-updater-${{ matrix.target }}.tar.gz
       - uses: actions/upload-artifact@v3
         with:
           name: db1000n-updater-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/db1000n-updater${{ matrix.ext }}
+          path: target/${{ matrix.target }}/release/db1000n-updater-${{ matrix.target }}.tar.gz
