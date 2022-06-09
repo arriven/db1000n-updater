@@ -50,7 +50,7 @@ jobs:
           command: build
           args: --release --target ${{ matrix.target }}
       - uses: a7ul/tar-action@v1.1.0
-        if: ${{ matrix.os != "windows-latest" }}
+        if: ${{ matrix.os != 'windows-latest' }}
         with:
           command: c
           cwd: ./target/${{ matrix.target }}/release
@@ -58,7 +58,7 @@ jobs:
             db1000n-updater${{ matrix.ext }}
           outPath: db1000n-updater-${{ matrix.target }}.tar.gz
       - uses: papeloto/action-zip@v1
-        if: ${{ matrix.os == "windows-latest" }}
+        if: ${{ matrix.os == 'windows-latest' }}
         with:
           files: ./target/${{ matrix.target }}/release/db1000n-updater${{ matrix.ext }}
           dest: db1000n-updater-${{ matrix.target }}.zip
@@ -68,12 +68,12 @@ jobs:
           files: |
             db1000n-updater-${{ matrix.target }}.*
       - uses: actions/upload-artifact@v3
-        if: ${{ matrix.os != "windows-latest" }}
+        if: ${{ matrix.os != 'windows-latest' }}
         with:
           name: db1000n-updater-${{ matrix.target }}
           path: db1000n-updater-${{ matrix.target }}.tar.gz
       - uses: actions/upload-artifact@v3
-        if: ${{ matrix.os == "windows-latest" }}
+        if: ${{ matrix.os == 'windows-latest' }}
         with:
           name: db1000n-updater-${{ matrix.target }}
           path: db1000n-updater-${{ matrix.target }}.zip
