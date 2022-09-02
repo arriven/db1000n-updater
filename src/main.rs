@@ -21,7 +21,7 @@ fn get_command() -> String {
     format!("./{}", get_bin_name())
 }
 
-fn update(ver: &str) -> Result<(), Box<dyn ::std::error::Error>> {
+fn update(ver: &str) -> anyhow::Result<()> {
     let status = self_update::backends::github::Update::configure()
         .repo_owner("arriven")
         .repo_name("db1000n")
@@ -37,7 +37,7 @@ fn update(ver: &str) -> Result<(), Box<dyn ::std::error::Error>> {
     Ok(())
 }
 
-fn get_version() -> Result<String, Box<dyn ::std::error::Error>> {
+fn get_version() -> anyhow::Result<String> {
     use std::process::Command;
 
     let output = Command::new(&get_command())
@@ -52,7 +52,7 @@ fn get_version() -> Result<String, Box<dyn ::std::error::Error>> {
     let root: Value = serde_json::from_str(input)?;
 
     // access element using .get()
-    let version = root.get("version").and_then(|value| value.as_str()).ok_or("no version")?;
+    let version = root.get("version").and_then(|value| value.as_str()).ok_or(anyhow::anyhow!("no version"))?;
 
     Ok(version.to_string())
 }
@@ -65,7 +65,7 @@ struct Cli {
     interval: u64,
 }
 
-pub fn main()-> Result<(), Box<dyn ::std::error::Error>> {
+pub fn main()-> anyhow::Result<()> {
     let args = Cli::parse();
     loop {
         let version = get_version();
